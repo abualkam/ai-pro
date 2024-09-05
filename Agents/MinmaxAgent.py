@@ -1,17 +1,19 @@
+import math
+
 from Agents.MultiSearchAgent import MultiAgentSearchAgent
 
 
 class MinmaxAgent(MultiAgentSearchAgent):
     def helper(self, game_state, depth, turn=0):
         legal_moves = game_state.get_legal_actions(turn % 2)
-        if not legal_moves or depth == 0:
+        if  game_state.done or depth == 0:
             return self.evaluation_function(game_state, self.player), None
 
         if turn % 2 == 0:
             max_score = -float('inf')
             best_action = None
             for action in legal_moves:
-                successor = game_state.generate_successor(action, self.opponent_player)
+                successor = game_state.generate_successor(action, self.player)
                 score, _ = self.helper(successor, depth - 1, turn + 1)
                 if score > max_score:
                     max_score = score
@@ -21,7 +23,7 @@ class MinmaxAgent(MultiAgentSearchAgent):
             min_score = float('inf')
             best_action = None
             for action in legal_moves:
-                successor = game_state.generate_successor(action, self.player)
+                successor = game_state.generate_successor(action, self.opponent_player)
                 score, _ = self.helper(successor, depth - 1, turn + 1)
                 if score < min_score:
                     min_score = score
@@ -47,5 +49,5 @@ class MinmaxAgent(MultiAgentSearchAgent):
             Returns the successor game state after an agent takes an action
         """
         """*** YOUR CODE HERE ***"""
-        action = self.helper(game_state, self.depth * 2)[1]
+        action = self.helper(game_state, 2 *self.depth )[1]
         return action

@@ -35,7 +35,7 @@ class GameState:
 
     @property
     def done(self):
-        return self.__done
+        return self.__done or self._is_full
 
     @property
     def _is_full(self):
@@ -46,9 +46,11 @@ class GameState:
         return self.__board
 
     def get_legal_actions(self, agent_index):
-        return [col for col in range(len(self.__last_added)) if self.__last_added[col] != 0]
+        return [col for col in range(len(self.__last_added)) if self.__last_added[col] > 0]
 
     def move(self, col, turn):
+        if col is None:
+            print(1)
         row = self.__last_added[col] - 1
         # TODO: check invalid human case
         self.__board[row][col] = turn
@@ -65,6 +67,7 @@ class GameState:
     def generate_successor(self, col, turn):
         new_board = copy.deepcopy(self.__board)
         last_added = copy.deepcopy(self.__last_added)
+
         successor = GameState(last_added= last_added, board= new_board,
                               rows=self.__rows, columns=self.__cols,done=self.__done)
         successor.move(col, turn)

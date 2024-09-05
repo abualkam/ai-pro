@@ -11,3 +11,6 @@ class Agent:
 
     def stop_running(self):
         pass
+
+    def update(self, game_state, action, reward, next_game_state):
+        pass

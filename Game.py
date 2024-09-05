@@ -25,10 +25,14 @@ class Game(object):
     def _game_loop(self):
         turn = 0
         while not self._state.done and not self._should_quit:
+
             if self.sleep_between_actions:
                 time.sleep(1)
             if turn % 2 == 0:
+                # print(self._state.board)
                 action = self.agent.get_action(self._state)
+                #self.agent.update()
+                # print(self._state.board)
                 cor1 = self._state.move(action, turn % 2 + 1)
                 self.display.update_state(self._state, cor1, turn % 2 + 1)
             else:

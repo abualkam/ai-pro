@@ -1,4 +1,5 @@
 import argparse
+import random
 
 import numpy
 import os
@@ -8,12 +9,101 @@ from Displays.SummaryDisplay import SummaryDisplay
 from Displays.GUIDisplay import FourInARow
 from Agents.AlphaBetaAgent import  AlphaBetaAgent
 from Agents.KeyboardAgent import  KeyboardAgent
-from Agents.ExpictimaxAgent import ExpectimaxAgent
+from Agents.ExpectimaxAgent import ExpectimaxAgent
 from Agents.MinmaxAgent import MinmaxAgent
+from Agents.ReflexAgent import ReflexAgent
+from Agents.QLearningAgent import QLearningAgent
 from  GameRunner import GameRunner
+from GameState import GameState
 
 
+def play_game(agent, opponent_agent=None):
+    """Function to play a single game."""
+    game_state = GameState()  # Start a new game
+    done = False
 
+    while not done:
+        # Agent's turn
+        action = agent.get_action(game_state)  # Get the action from the Q-learning agent
+        row, col = game_state.move(action, 1)  # Agent is player '1'
+
+        # Check if the game is over after agent's move
+        if game_state.done:
+            if game_state.is_win:
+                reward = 1  # Win for the agent
+            else:
+                reward = 0  # Draw
+            agent.update(game_state, action, reward, game_state)  # Update Q-table with the final state
+            break
+
+        # Opponent's turn
+        if opponent_agent:
+            opponent_action = opponent_agent.get_action(game_state)
+        else:
+            opponent_action = random.choice(game_state.get_legal_actions(2))  # Random move for the opponent
+
+        row, col = game_state.move(opponent_action, 2)  # Opponent is player '2'
+
+        # Check if the game is over after opponent's move
+        if game_state.done:
+            if game_state.is_win:
+                reward = -1  # Loss for the agent
+            else:
+                reward = 0  # Draw
+            agent.update(game_state, action, reward, game_state)  # Update Q-table with the final state
+            break
+
+        # Update Q-table for non-terminal state if training
+        reward = -1  # Small negative reward to encourage quicker wins
+        next_state = game_state.generate_successor(action, 1)
+        agent.update(game_state, action, reward, next_state)
+
+        # Continue to the next state
+        game_state = next_state
+
+    return reward
+
+
+def train_agent(agent, episodes=1000):
+    opponents = [
+        ("Random", ReflexAgent(player=2)),
+        ("EasyMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.easy_evaluation_function, player=2)),
+        ("MediumMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.medium_evaluation_function, player=2)),
+        ("HardMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.hard_evaluation_function, player=2)),
+    ]
+
+    for opponent_name, opponent in opponents:
+        print(f"Training against {opponent_name} agent.")
+        for episode in range(episodes):
+            play_game(agent, opponent_agent=opponent)
+            if episode % 10 == 0:
+                print(f"Episode {episode} against {opponent_name}, Epsilon: {agent.epsilon:.4f}")
+
+                if agent.epsilon == agent.min_epsilon:
+                    agent.epsilon = 1
+                    break
+                #
+        # print(f"Finished training
+        # against {opponent_name} agent.")
+
+    print("Training against all types complete!")
+
+def evaluate_agent(agent, games=1000):
+    """Function to evaluate the trained agent against a random player."""
+    wins = 0
+    losses = 0
+    draws = 0
+
+    for _ in range(games):
+        result = play_game(agent)
+        if result == 1:
+            wins += 1
+        elif result == -1:
+            losses += 1
+        else:
+            draws += 1
+
+    print(f"Evaluation: Wins: {wins}, Losses: {losses}, Draws: {draws}")
 
 
 
@@ -26,36 +116,52 @@ def create_display(display_name):
 
 def create_agent(agent_name,player , evaluation_function, depth, display):
     if agent_name == "MinmaxAgent":
-        return MinmaxAgent(depth=depth, evaluation_function=Heuristics.easy_evaluation_function, player=player)
-    elif agent_name == "ExpictimaxAgent":
-        return ExpectimaxAgent(depth=depth, evaluation_function=Heuristics.easy_evaluation_function, player=player)
+        return MinmaxAgent(depth=depth, evaluation_function=evaluation_function, player=player)
+    elif agent_name == "ExpectimaxAgent":
+        return ExpectimaxAgent(depth=depth, evaluation_function=evaluation_function, player=player)
     elif agent_name == "AlphaBetaAgent":
-        return AlphaBetaAgent(depth=depth, evaluation_function=Heuristics.easy_evaluation_function, player=player)
+        return AlphaBetaAgent(depth=depth, evaluation_function=evaluation_function, player=player)
     elif agent_name == "KeyboardAgent":
         return KeyboardAgent(display)
+    elif agent_name == "QLearningAgent":
+        model = QLearningAgent(player=player)
+        # model.t
+        return model
     raise Exception("Invalid agent name.")
 
+def create_evaluation_function(difficulty):
+    if difficulty == "Easy":
+        return Heuristics.easy_evaluation_function
+    elif difficulty == "Medium":
+        return Heuristics.medium_evaluation_function
+    elif difficulty == "Hard":
+        return Heuristics.hard_evaluation_function
 
+    raise Exception("Invalid heuristic difficulty.")
 def main():
     parser = argparse.ArgumentParser(description='2048 game.')
     parser.add_argument('--random_seed', help='The seed for the random state.', default=numpy.random.randint(100), type=int)
     displays = ['GUI', 'SummaryDisplay']
-    agents = ['KeyboardAgent', 'ReflexAgent', 'MinmaxAgent', 'AlphaBetaAgent', 'ExpectimaxAgent']
+    agents = ['KeyboardAgent', 'ReflexAgent', 'MinmaxAgent', 'AlphaBetaAgent', 'ExpectimaxAgent', 'QLearningAgent']
     parser.add_argument('--display', choices=displays, help='The game ui.', default="GUI", type=str)
-    parser.add_argument('--agent1', choices=agents, help='The agent.', default='KeyboardAgent', type=str)
-    parser.add_argument('--agent2', choices=agents, help='The agent.', default='MinmaxAgent'
+    parser.add_argument('--agent1', choices=agents, help='The agent.', default='AlphaBetaAgent', type=str)
+    parser.add_argument('--agent2', choices=agents, help='The agent.', default='AlphaBetaAgent'
                                                                                , type=str)
     parser.add_argument('--depth', help='The maximum depth for to search in the game tree.', default=2, type=int)
     parser.add_argument('--sleep_between_actions', help='Should sleep between actions.', default=False, type=bool)
     parser.add_argument('--num_of_games', help='The number of games to run.', default=1, type=int)
     parser.add_argument('--evaluation_function', help='The evaluation function for ai agent.',
-                        default='better', type=str)
+                        default='Hard', type=str)
+
     args = parser.parse_args()
     numpy.random.seed(args.random_seed)
     display = create_display(args.display)
-    agent1 = create_agent(args.agent1,1,args.evaluation_function,args.depth,display)
-    agent2 = create_agent(args.agent2,2,args.evaluation_function,args.depth, display)
+    evaluation_function = create_evaluation_function(args.evaluation_function)
+    agent1 = create_agent(args.agent1,1,evaluation_function,args.depth,display)
+    agent2 = create_agent(args.agent2,2,evaluation_function,args.depth, display)
 
+    if args.agent1 == "QLearningAgent":
+        train_agent(agent1)
     game_runner = GameRunner(display=display, agent1=agent1,agent2=agent2,
                              sleep_between_actions=args.sleep_between_actions)
     for i in range(args.num_of_games):

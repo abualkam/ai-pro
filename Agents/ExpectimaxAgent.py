@@ -16,7 +16,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             for action in legal_moves:
                 successor = game_state.generate_successor(action, self.player)
                 score, _ = self.helper(successor, depth - 1, turn + 1)
-                if score > max_score:
+                if score >= max_score:
                     max_score = score
                     best_action = action
             return max_score, best_action

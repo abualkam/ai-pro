@@ -8,8 +8,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
     def helper(self, game_state, depth, alpha=-float('inf'), beta=float('inf'), turn=0):
         legal_moves = game_state.get_legal_actions(turn % 2)
-        if not legal_moves or depth == 0:
-            return self.evaluation_function(game_state, turn + 1), None
+        if game_state.done or depth == 0:
+            return self.evaluation_function(game_state, self.player), None
 
         if turn % 2 == 0:
             max_score = -float('inf')
@@ -23,6 +23,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 alpha = max(alpha, score)
                 if beta <= alpha:
                     break
+
             return max_score, best_action
         else:
             min_score = float('inf')
