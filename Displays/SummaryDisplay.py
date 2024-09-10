@@ -24,7 +24,7 @@ class SummaryDisplay(Display):
             # self.highest_tile.append(new_state.board.max())
             self.game_durations.append(game_duration)
             b = new_state.board
-            self.num_steps.append(np.count_nonzero(b)//2)
+            self.num_steps.append(np.count_nonzero(b))
 
 
     def print_stats(self):
