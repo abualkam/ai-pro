@@ -7,8 +7,8 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
     def helper(self, game_state, depth,turn=0):
         legal_moves = game_state.get_legal_actions(turn % 2)
-        if not legal_moves or depth == 0 :
-            return self.evaluation_function(game_state, self.player) , None
+        if game_state.done or depth == 0:
+            return self.evaluation_function(game_state, self.player), None
 
         if turn % 2 == 0:  # Maximizing player
             max_score = -float('inf')
@@ -16,7 +16,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             for action in legal_moves:
                 successor = game_state.generate_successor(action, self.player)
                 score, _ = self.helper(successor, depth - 1, turn + 1)
-                if score >= max_score:
+                if score > max_score:
                     max_score = score
                     best_action = action
             return max_score, best_action

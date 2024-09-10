@@ -64,24 +64,24 @@ def play_game(agent, opponent_agent=None):
     return reward
 
 
-def train_agent(agent, episodes=1000):
+def train_agent(agent, episodes=5000):
     opponents = [
-        ("Random", ReflexAgent(player=2)),
-        ("EasyMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.easy_evaluation_function, player=2)),
-        ("MediumMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.medium_evaluation_function, player=2)),
-        ("HardMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.hard_evaluation_function, player=2)),
+        (episodes,"Random", ReflexAgent(player=2)),
+        (episodes,"EasyMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.easy_evaluation_function, player=2)),
+        (episodes,"MediumMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.medium_evaluation_function, player=2)),
+        (episodes,"HardMinmax", AlphaBetaAgent(depth=2, evaluation_function=Heuristics.hard_evaluation_function, player=2)),
     ]
 
-    for opponent_name, opponent in opponents:
+    for episodes, opponent_name, opponent in opponents:
         print(f"Training against {opponent_name} agent.")
         for episode in range(episodes):
             play_game(agent, opponent_agent=opponent)
-            if episode % 10 == 0:
-                print(f"Episode {episode} against {opponent_name}, Epsilon: {agent.epsilon:.4f}")
+            if episode % 1000 == 0:
+                print(f"Episode {episode} against {opponent_name}, Number of states: {len(agent.Q)}")
 
-                if agent.epsilon == agent.min_epsilon:
-                    agent.epsilon = 1
-                    break
+                # if agent.epsilon == agent.min_epsilon:
+                #     agent.epsilon = 1
+                #     break
                 #
         # print(f"Finished training
         # against {opponent_name} agent.")
@@ -125,6 +125,7 @@ def create_agent(agent_name,player , evaluation_function, depth, display):
         return KeyboardAgent(display)
     elif agent_name == "QLearningAgent":
         model = QLearningAgent(player=player)
+        train_agent(model)
         # model.t
         return model
     raise Exception("Invalid agent name.")
@@ -160,8 +161,8 @@ def main():
     agent1 = create_agent(args.agent1,1,evaluation_function,args.depth,display)
     agent2 = create_agent(args.agent2,2,evaluation_function,args.depth, display)
 
-    if args.agent1 == "QLearningAgent":
-        train_agent(agent1)
+    # if args.agent1 == "QLearningAgent":
+    #     train_agent(agent1)
     game_runner = GameRunner(display=display, agent1=agent1,agent2=agent2,
                              sleep_between_actions=args.sleep_between_actions)
     for i in range(args.num_of_games):

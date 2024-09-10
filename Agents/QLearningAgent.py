@@ -5,7 +5,7 @@ import numpy as np
 
 
 class QLearningAgent(Agent):
-    def __init__(self, player, alpha=0.1, gamma=0.9, epsilon=1.0, epsilon_decay=0.995, min_epsilon=0.01):
+    def __init__(self, player, alpha=0.1, gamma=0.9, epsilon=1.0, epsilon_decay=1, min_epsilon=0.01):
         super().__init__()
         self.alpha = alpha
         self.gamma = gamma
@@ -14,6 +14,8 @@ class QLearningAgent(Agent):
         self.min_epsilon = min_epsilon
         self.Q = {}  # Q-table: {state: {action: Q-value}}
         self.player = player
+        self.player = player
+
 
     def get_action(self, game_state):
         # Convert the game board to a tuple to use as a state key
