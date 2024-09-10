@@ -13,6 +13,7 @@ from Agents.ExpectimaxAgent import ExpectimaxAgent
 from Agents.MinmaxAgent import MinmaxAgent
 from Agents.ReflexAgent import ReflexAgent
 from Agents.QLearningAgent import QLearningAgent
+from Agents.MonteCarloAgent import MonteCarloAgent
 from  GameRunner import GameRunner
 from GameState import GameState
 
@@ -128,6 +129,8 @@ def create_agent(agent_name,player , evaluation_function, depth, display):
         train_agent(model)
         # model.t
         return model
+    elif agent_name == "MonteCarloAgent":
+        return MonteCarloAgent()
     raise Exception("Invalid agent name.")
 
 def create_evaluation_function(difficulty):
@@ -143,7 +146,7 @@ def main():
     parser = argparse.ArgumentParser(description='2048 game.')
     parser.add_argument('--random_seed', help='The seed for the random state.', default=numpy.random.randint(100), type=int)
     displays = ['GUI', 'SummaryDisplay']
-    agents = ['KeyboardAgent', 'ReflexAgent', 'MinmaxAgent', 'AlphaBetaAgent', 'ExpectimaxAgent', 'QLearningAgent']
+    agents = ['KeyboardAgent', 'ReflexAgent', 'MinmaxAgent', 'AlphaBetaAgent', 'ExpectimaxAgent', 'QLearningAgent', 'MonteCarloAgent']
     parser.add_argument('--display', choices=displays, help='The game ui.', default="GUI", type=str)
     parser.add_argument('--agent1', choices=agents, help='The agent.', default='AlphaBetaAgent', type=str)
     parser.add_argument('--agent2', choices=agents, help='The agent.', default='AlphaBetaAgent'
@@ -151,22 +154,28 @@ def main():
     parser.add_argument('--depth', help='The maximum depth for to search in the game tree.', default=2, type=int)
     parser.add_argument('--sleep_between_actions', help='Should sleep between actions.', default=False, type=bool)
     parser.add_argument('--num_of_games', help='The number of games to run.', default=1, type=int)
-    parser.add_argument('--evaluation_function', help='The evaluation function for ai agent.',
+    parser.add_argument('--evaluation_function1', help='The evaluation function for ai agent.',
+                        default='Hard', type=str)
+    parser.add_argument('--evaluation_function2', help='The evaluation function for ai agent.',
                         default='Hard', type=str)
 
     args = parser.parse_args()
     numpy.random.seed(args.random_seed)
     display = create_display(args.display)
-    evaluation_function = create_evaluation_function(args.evaluation_function)
-    agent1 = create_agent(args.agent1,1,evaluation_function,args.depth,display)
-    agent2 = create_agent(args.agent2,2,evaluation_function,args.depth, display)
+    evaluation_function1 = create_evaluation_function(args.evaluation_function1)
+    evaluation_function2 = create_evaluation_function(args.evaluation_function2)
+    agent1 = create_agent(args.agent1,1,evaluation_function1,args.depth,display)
+    agent2 = create_agent(args.agent2,2,evaluation_function2,args.depth, display)
 
     # if args.agent1 == "QLearningAgent":
     #     train_agent(agent1)
     game_runner = GameRunner(display=display, agent1=agent1,agent2=agent2,
                              sleep_between_actions=args.sleep_between_actions)
     for i in range(args.num_of_games):
+        print(i)
         score = game_runner.new_game(initial_state=None)
+
+    print(display.print_stats())
     # if display is not None:
     #     display.print_stats()
     # return scores

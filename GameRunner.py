@@ -21,8 +21,8 @@ class GameRunner(object):
         game = Game(self._agent1, self._agent2, self.display, sleep_between_actions=self.sleep_between_actions)
         self.current_game = game
         game.run(initial_state)
-        if messagebox.askquestion('Game over', 'Do you want to play again?') == 'yes':
-            self.new_game()
+        # if messagebox.askquestion('Game over', 'Do you want to play again?') == 'yes':
+        #     self.new_game()
 
     def quit_game(self):
         if self.current_game is not None:
