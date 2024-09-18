@@ -20,7 +20,8 @@ Install the required dependencies using the `requirements.txt` file:
 pip install -r requirements.txt
 ```
 ## Usage
-python main.py [OPTIONS]
+python3 main.py --agent1=MonteCarloAgent --agent2=AlphaBetaAgent 
+            --evaluation_function1=Easy --evaluation_function2=Easy --display=SummaryDisplay --num_of_games=10
 
 ## Game Options
 * --random_seed: The seed for the random state (default: a random integer between 0 and 100).
@@ -32,7 +33,8 @@ python main.py [OPTIONS]
 * --depth: The maximum depth for AI search in the game tree (default: 2).
 * --sleep_between_actions: Boolean flag indicating whether to sleep between actions (default: False).
 * --num_of_games: The number of games to run (default: 1).
-* --evaluation_function: The evaluation function for the AI agent. Default is better.
+* --evaluation_function1: The evaluation function for the AI agent. Default is better.
+* --evaluation_function2: The evaluation function for the AI agent. Default is better.
 
 
 ## Agents
