@@ -49,4 +49,4 @@ class ReflexAgent(Agent):
         # Useful information you can extract from a GameState (game_state.py)
 
         successor_game_state = current_game_state.generate_successor(action, self.player)
-        return Heuristics.medium_evaluation_function(successor_game_state, self.player)
+        return Heuristics.easy_evaluation_function(successor_game_state, self.player)

@@ -15,7 +15,7 @@ def evaluate_depth(board, player):
     """
     score = 0
     opponent_player = 1 if player == 2 else 2
-    col_weights = [1, 2, 4, 8, 4, 2, 1]
+    col_weights = [2, 4, 8, 16, 8, 4, 2]
     rows = board.shape[0]
     center_column = board.shape[1]//2
     for row in range(board.shape[0]):
@@ -123,25 +123,13 @@ def score_position(board, player):
 
 
 def evaluate_window(window, player, opponent, center_column_index):
-    score = 0
-
     if window.count(player) == 4:
-        score += 1000  # Maximize winning
+        return 1000
     elif window.count(player) == 3 and window.count(0) == 1:
-        score += 100  # High score for potential winning move
+        return 100
     elif window.count(player) == 2 and window.count(0) == 2:
-        score += 10  # Score for potential 2 in a row
-
-    # Boost score if window includes center column
-    # for i, pos in enumerate(window):
-    #     if pos == player and center_column_index - 1 <= i <= center_column_index + 1:
-    #         score += 10  # Additional boost for center column involvement
-
-    # Block opponent
-    # if window.count(opponent) == 3 and window.count(0) == 1:
-    #     score -= 80  # Strong negative score to prioritize blocking
-
-    return score
+        return 10
+    return 0
 
 
 def evaluate_four_connected(board, player):
@@ -308,6 +296,3 @@ def easy_evaluation_function(game_state, player):
     # opponent_four_connected = score_position(game_state.board, opponent)
 
     return four_connected
-
-
-

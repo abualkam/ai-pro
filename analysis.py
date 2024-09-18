@@ -49,10 +49,9 @@ def create_agent(agent_name,player , depth, display):
     # elif agent_name == "QLearningAgent":
     #     model = QLearningAgent(player=player)
     #     train_agent(model)
-        # model.t
-        # return model
+    #     return model
     elif agent_name == "MonteCarloAgent":
-        return MonteCarloAgent()
+        return MonteCarloAgent(player)
     
     raise Exception("Invalid agent name." +agent_name)
 
@@ -73,7 +72,7 @@ def run_n_games(index_i,index_j,num,ag1,ag2,dis):
         win_matrix[index_i, index_j] = display.winner.count(1) / num_games
         draw_matrix[index_i, index_j] = display.winner.count(0) / num_games
         lose_matrix[index_i, index_j] = display.winner.count(2) / num_games
-        
+
         print(display.winner)
         print(display.num_steps)
         print(display.game_durations)
@@ -84,6 +83,8 @@ display = SummaryDisplay()
 # Define agents
 # agents = [AlphaBetaAgent(), ExpectimaxAgent(), MinmaxAgent(), MonteCarloAgent(), QLearningAgent(), ReflexAgent()]
 agent_names = ['EasyAlphaBetaAgent','MediumAlphaBetaAgent','HardAlphaBetaAgent', 'EasyExpectimaxAgent','MediumExpectimaxAgent','HardExpectimaxAgent','EasyMinmaxAgent','MediumMinmaxAgent', 'HardMinmaxAgent', 'MonteCarloAgent', 'ReflexAgent']
+# agent_names = ['MediumAlphaBetaAgent','HardAlphaBetaAgent']
+               # 'EasyExpectimaxAgent','MediumExpectimaxAgent','HardExpectimaxAgent','EasyMinmaxAgent','MediumMinmaxAgent', 'HardMinmaxAgent', 'MonteCarloAgent', 'ReflexAgent']
 # Initialize metrics storage
 n_agents = len(agent_names)
 win_matrix = np.zeros((n_agents, n_agents))
@@ -95,43 +96,45 @@ times = np.zeros((n_agents, n_agents))      # To store average time taken for ea
 num_games = 10
 display = SummaryDisplay()
 # Run games between each pair of agents
+threads = []
 for i in range(len(agent_names)):
     
     for j in range(len(agent_names)):
         display = SummaryDisplay()
         agent1 = create_agent(agent_names[i], 1,2,display )
-        if agent_names[j] == "QLearningAgent" or agent_names[j] == "MonteCarloAgent":
-            win_matrix[i, j] = 0
-            draw_matrix[i, j] = 0
-            lose_matrix[i,j] = 0
-            num_moves[i, j] = 0
-            times[i, j] = 0
-            continue
-        
+        agents_arr = [agent_names[i],agent_names[j]]
+        if "QLearningAgent" in agents_arr or "MonteCarloAgent" in agents_arr or "EasyExpectimaxAgent" in agents_arr\
+                or "MediumExpectimaxAgent" in agents_arr or "HardExpectimaxAgent" in agents_arr or 'ReflexAgent' in agents_arr:
+            num_games =10
+        else:
+            num_games = 1
+
         print(f'agent1:{agent_names[i]} vs agent2:{agent_names[j]}')
         agent2 = create_agent(agent_names[j], 2,2,display)
-        thread = threading.Thread(target=run_n_games, args=(i, j, num_games, agent1, agent2, display))
-        thread.start()
-        #
-        
-        # for q in range(num_games):
-        #     # Initialize game
-        #     print(f'game number {q}')
-        #     game = GameRunner(display=display,agent1=agent1, agent2=agent2)
-        #     start_time = time.time()
-        #     # Play game and get result
-        #     game.new_game(initial_state=None) 
-        
-        # # Store win rates, number of moves, and time
-        # win_matrix[i, j] = display.winner.count(1) / num_games
-        # draw_matrix[i, j] = display.winner.count(0) / num_games
-        # lose_matrix[i, j] = display.winner.count(2) / num_games
-        
-        # print(display.winner)
-        # print(display.num_steps)
-        # print(display.game_durations)
-        # num_moves[i, j] = sum(display.num_steps) / num_games
-        # times[i, j] = sum(display.game_durations) / num_games
+        # thread = threading.Thread(target=run_n_games, args=(i, j, num_games, agent1, agent2, display))
+        # thread.start()
+        # threads.append(thread)
+
+
+
+        for q in range(num_games):
+            # Initialize game
+            print(f'game number {q}')
+            game = GameRunner(display=display,agent1=agent1, agent2=agent2)
+            start_time = time.time()
+            # Play game and get result
+            game.new_game(initial_state=None)
+
+        # Store win rates, number of moves, and time
+        win_matrix[i, j] = display.winner.count(1) / num_games
+        draw_matrix[i, j] = display.winner.count(0) / num_games
+        lose_matrix[i, j] = display.winner.count(2) / num_games
+
+        print(display.winner)
+        print(display.num_steps)
+        print(display.game_durations)
+        num_moves[i, j] = sum(display.num_steps) / num_games
+        times[i, j] = sum(display.game_durations) / num_games
 
     # for thread in threads:
     #     thread.join() 
@@ -156,7 +159,10 @@ def plot_metrics(matrix, title, labels):
 
     plt.tight_layout()
     plt.show()
+
+# thread.join()
 # Plot Win Rates
+
 plot_metrics(win_matrix, 'Win Rate Heatmap', agent_names)
 
 # Plot Win Rates
