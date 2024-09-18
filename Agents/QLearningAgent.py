@@ -6,15 +6,13 @@ import numpy as np
 
 class QLearningAgent(Agent):
     def __init__(self, player, alpha=0.1, gamma=0.9, epsilon=1.0, epsilon_decay=1, min_epsilon=0.01):
-        super().__init__()
+        super().__init__(player)
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
         self.epsilon_decay = epsilon_decay
         self.min_epsilon = min_epsilon
         self.Q = {}  # Q-table: {state: {action: Q-value}}
-        self.player = player
-        self.player = player
 
 
     def get_action(self, game_state):
@@ -36,9 +34,9 @@ class QLearningAgent(Agent):
         state = self._get_state_key(game_state)
         next_state = self._get_state_key(next_game_state)
         if state not in self.Q:
-            self.Q[state] = {a: 0 for a in game_state.get_legal_actions(1)}
+            self.Q[state] = {a: 0 for a in game_state.get_legal_actions(self.player)}
         if next_state not in self.Q:
-            self.Q[next_state] = {a: 0 for a in next_game_state.get_legal_actions(1)}
+            self.Q[next_state] = {a: 0 for a in next_game_state.get_legal_actions(self.player)}
 
         if action not in self.Q[state]:
             self.Q[state][action] = 0

@@ -9,8 +9,8 @@ class KeyboardAgent(Agent):
     UP_KEY = 'w'
     DOWN_KEY = 's'
 
-    def __init__(self, tk_window):
-        super().__init__()
+    def __init__(self, player,tk_window):
+        super().__init__(player)
         self.keys = []
         tk_window.subscribe_to_mouse_click(self.listener)
         self.tk_window = tk_window

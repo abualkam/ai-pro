@@ -8,8 +8,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 class MonteCarloAgent(Agent):
-    def __init__(self, num_simulations=100, discount_factor=1.0, exploration_factor=1.0):
-        super().__init__()
+    def __init__(self,player, num_simulations=100, discount_factor=1.0, exploration_factor=1.0):
+        super().__init__(player)
         self.num_simulations = num_simulations
         self.discount_factor = discount_factor
         self.exploration_factor = exploration_factor
@@ -46,10 +46,12 @@ class MonteCarloAgent(Agent):
 
     def simulate_episode(self, initial_state, initial_action):
         state = copy.deepcopy(initial_state)
-        state.move(initial_action, 1)
+        current_player = 1 if self.player == 2 else 2
+
+        state.move(initial_action, current_player)
 
         episode = [(state, 0)]
-        current_player = 2
+        current_player = 2 if self.player == 2 else 1
 
         while not state.done:
             legal_actions = state.get_legal_actions(current_player)

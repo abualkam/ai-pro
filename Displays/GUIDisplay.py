@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.messagebox
 import weakref
 from abc import ABC
+from tkinter import messagebox
 
 from Displays.Display import Display
 
@@ -137,3 +138,8 @@ class FourInARow(tk.Tk, Display):
         self.update_idletasks()
         self.update()
 
+    def play_again(self):
+        if messagebox.askquestion('Game over', 'Do you want to play again?') == 'yes':
+            return True
+        return False
+        #     self.new_game()

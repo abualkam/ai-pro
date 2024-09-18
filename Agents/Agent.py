@@ -2,9 +2,9 @@ import abc
 
 
 class Agent:
-    def __init__(self):
-        pass
-
+    def __init__(self, player):
+        self.player = player
+        self.opponent_player = 1 if player == 2 else 2
     @abc.abstractmethod
     def get_action(self, game_state):
         return

@@ -13,9 +13,7 @@ class ReflexAgent(Agent):
     """
 
     def __init__(self, player):
-        super().__init__()
-        self.player = player
-        self.opponent_player = 1 if player == 2 else 2
+        super().__init__(player)
 
     def get_action(self, game_state):
         """

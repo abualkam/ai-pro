@@ -123,14 +123,14 @@ def create_agent(agent_name,player , evaluation_function, depth, display):
     elif agent_name == "AlphaBetaAgent":
         return AlphaBetaAgent(depth=depth, evaluation_function=evaluation_function, player=player)
     elif agent_name == "KeyboardAgent":
-        return KeyboardAgent(display)
+        return KeyboardAgent(player, display)
     elif agent_name == "QLearningAgent":
         model = QLearningAgent(player=player)
         train_agent(model)
         # model.t
         return model
     elif agent_name == "MonteCarloAgent":
-        return MonteCarloAgent()
+        return MonteCarloAgent(player)
     raise Exception("Invalid agent name.")
 
 def create_evaluation_function(difficulty):

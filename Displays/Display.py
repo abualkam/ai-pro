@@ -14,3 +14,6 @@ class Display(ABC):
 
     def print_stats(self):
         pass
+
+    def play_again(self):
+        pass
