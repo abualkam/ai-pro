@@ -22,25 +22,20 @@ pip install -r requirements.txt
 ## Usage
 python main.py [OPTIONS]
 
-##Game Options
+## Game Options
 * --random_seed: The seed for the random state (default: a random integer between 0 and 100).
 * --display: The game UI to use. Choices are:
   * GUI: Graphical interface (default).
   * SummaryDisplay: Console-based display.
-* --agent1: The first player agent. Choices are:
-  * KeyboardAgent: Human player using keyboard input (default).
-  * ReflexAgent: A simple AI agent.
-  * MinmaxAgent: AI agent using the Minimax algorithm.
-  * AlphaBetaAgent: AI agent using Alpha-Beta pruning.
-  * ExpectimaxAgent: AI agent using the Expectimax algorithm.
-* --agent2: The second player agent (same choices as --agent1).
+* --agent1: The first player agent. 
+* --agent2: The second player agent.
 * --depth: The maximum depth for AI search in the game tree (default: 2).
 * --sleep_between_actions: Boolean flag indicating whether to sleep between actions (default: False).
 * --num_of_games: The number of games to run (default: 1).
 * --evaluation_function: The evaluation function for the AI agent. Default is better.
 
 
-##Agents
+## Agents
 
 * KeyboardAgent: A human player controlled via keyboard.
 * ReflexAgent: A simple AI agent that makes decisions based on the current state.
