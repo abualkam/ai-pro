@@ -80,11 +80,7 @@ def run_n_games(index_i,index_j,num,ag1,ag2,dis):
         times[index_i, index_j] = sum(display.game_durations) / num_games
 
 display = SummaryDisplay()
-# Define agents
-# agents = [AlphaBetaAgent(), ExpectimaxAgent(), MinmaxAgent(), MonteCarloAgent(), QLearningAgent(), ReflexAgent()]
 agent_names = ['EasyAlphaBetaAgent','MediumAlphaBetaAgent','HardAlphaBetaAgent', 'EasyExpectimaxAgent','MediumExpectimaxAgent','HardExpectimaxAgent','EasyMinmaxAgent','MediumMinmaxAgent', 'HardMinmaxAgent', 'MonteCarloAgent', 'ReflexAgent']
-# agent_names = ['MediumAlphaBetaAgent','HardAlphaBetaAgent']
-               # 'EasyExpectimaxAgent','MediumExpectimaxAgent','HardExpectimaxAgent','EasyMinmaxAgent','MediumMinmaxAgent', 'HardMinmaxAgent', 'MonteCarloAgent', 'ReflexAgent']
 # Initialize metrics storage
 n_agents = len(agent_names)
 win_matrix = np.zeros((n_agents, n_agents))
@@ -93,7 +89,7 @@ lose_matrix = np.zeros((n_agents, n_agents))
 num_moves = np.zeros((n_agents,n_agents))  # To store average number of moves for each agent vs another agent
 times = np.zeros((n_agents, n_agents))      # To store average time taken for each agent vs another agent
 
-num_games = 10
+num_games = 100
 display = SummaryDisplay()
 # Run games between each pair of agents
 threads = []
@@ -103,19 +99,8 @@ for i in range(len(agent_names)):
         display = SummaryDisplay()
         agent1 = create_agent(agent_names[i], 1,2,display )
         agents_arr = [agent_names[i],agent_names[j]]
-        if "QLearningAgent" in agents_arr or "MonteCarloAgent" in agents_arr or "EasyExpectimaxAgent" in agents_arr\
-                or "MediumExpectimaxAgent" in agents_arr or "HardExpectimaxAgent" in agents_arr or 'ReflexAgent' in agents_arr:
-            num_games =10
-        else:
-            num_games = 1
-
         print(f'agent1:{agent_names[i]} vs agent2:{agent_names[j]}')
         agent2 = create_agent(agent_names[j], 2,2,display)
-        # thread = threading.Thread(target=run_n_games, args=(i, j, num_games, agent1, agent2, display))
-        # thread.start()
-        # threads.append(thread)
-
-
 
         for q in range(num_games):
             # Initialize game
@@ -160,8 +145,7 @@ def plot_metrics(matrix, title, labels):
     plt.tight_layout()
     plt.show()
 
-# thread.join()
-# Plot Win Rates
+
 
 plot_metrics(win_matrix, 'Win Rate Heatmap', agent_names)
 
