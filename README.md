@@ -1,7 +1,3 @@
-Here's the edited version of your README file:
-
----
-
 # Four in a Row Game
 
 This is a Python implementation of the classic "Four in a Row" (also known as "Connect Four") game. It features a graphical user interface (GUI) and supports multiple AI agents using various algorithms. You can play against another human or challenge one of the AI agents.
@@ -60,4 +56,3 @@ python3 analysis.py
 - **QLearningAgent**: A reinforcement learning agent.
 - **MonteCarloAgent**: Uses the Monte Carlo method.
 
----
