@@ -1,50 +1,63 @@
+Here's the edited version of your README file:
+
+---
+
 # Four in a Row Game
 
-This is a Python implementation of the classic "Four in a Row" (also known as "Connect Four") game, featuring a graphical user interface (GUI) and support for different types of AI agents. You can play against another human or one of several AI agents using different algorithms.
+This is a Python implementation of the classic "Four in a Row" (also known as "Connect Four") game. It features a graphical user interface (GUI) and supports multiple AI agents using various algorithms. You can play against another human or challenge one of the AI agents.
 
 ## Table of Contents
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Game Options](#game-options)
 - [Agents](#agents)
 - [Examples](#examples)
+- [Running Analysis](#running-analysis)
 
 ## Installation
 
-To run the game, you'll need Python 3.x.
+To run the game, ensure you have Python 3.x installed. Install dependencies with:
 
-Install the required dependencies using the `requirements.txt` file:
-
-```
+```bash
 pip install -r requirements.txt
 ```
+
 ## Usage
+
+Run the game with the following command:
+
+```bash
 python3 main.py --agent1 <Agent1> --agent2 <Agent2> --display <DisplayType> [OPTIONS]
+```
 
 ## Game Options
-* --random_seed: Set the random state seed (default: a random integer).
-* --display: The game UI type. Available options:
-** GUI (Graphical interface)
-** SummaryDisplay (Command-line summary)
-* --agent1: Player 1 agent. Options include:
-** KeyboardAgent, ReflexAgent, MinmaxAgent, AlphaBetaAgent, ExpectimaxAgent, QLearningAgent, MonteCarloAgent
-* --agent2: Player 2 agent (same choices as --agent1).
-* --depth: Maximum search depth in the game tree (default: 2).
-* --sleep_between_actions: Boolean flag to control pauses between actions (default: False).
-* --num_of_games: Number of games to simulate (default: 1).
-* --evaluation_function1: Evaluation function for Player 1 (default: Hard).
-* --evaluation_function2: Evaluation function for Player 2 (default: Hard).
+- `--random_seed`: Set the random state seed (default: random).
+- `--display`: Choose the UI type:
+  - `GUI`: Graphical interface.
+  - `SummaryDisplay`: Command-line summary.
+- `--agent1` & `--agent2`: Choose agents for players:
+  - `KeyboardAgent`, `ReflexAgent`, `MinmaxAgent`, `AlphaBetaAgent`, `ExpectimaxAgent`, `QLearningAgent`, `MonteCarloAgent`.
+- `--depth`: Max search depth for AI agents (default: 2).
+- `--sleep_between_actions`: Whether to pause between actions (default: `False`).
+- `--num_of_games`: Number of games to run (default: 1).
+- `--evaluation_function1` & `--evaluation_function2`: Evaluation functions (default: `Hard`).
 
 ## Running Analysis
-To perform an analysis of the game results, run the following command:
 
+To perform an analysis on game results:
+
+```bash
 python3 analysis.py
+```
 
 ## Agents
 
-* KeyboardAgent: A human player controlled via keyboard.
-* ReflexAgent: A simple AI agent that makes decisions based on the current state.
-* MinmaxAgent: An AI agent that uses the Minimax algorithm for decision-making.
-* AlphaBetaAgent: An AI agent that optimizes Minimax with Alpha-Beta pruning.
-* ExpectimaxAgent: An AI agent that uses the Expectimax algorithm for decision-making.
+- **KeyboardAgent**: A human-controlled player.
+- **ReflexAgent**: Simple AI making decisions based on the current state.
+- **MinmaxAgent**: Uses the Minimax algorithm.
+- **AlphaBetaAgent**: Optimized Minimax with Alpha-Beta pruning.
+- **ExpectimaxAgent**: Uses the Expectimax algorithm.
+- **QLearningAgent**: A reinforcement learning agent.
+- **MonteCarloAgent**: Uses the Monte Carlo method.
+
+---
