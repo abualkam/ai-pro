@@ -12,11 +12,8 @@ This is a Python implementation of the classic "Four in a Row" (also known as "C
 
 ## Installation
 
-To run the game, ensure you have Python 3.x installed. Install dependencies with:
+To run the game, ensure you have Python 3.x installed. 
 
-```bash
-pip install -r requirements.txt
-```
 
 ## Usage
 
